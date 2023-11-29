@@ -124,5 +124,37 @@
 
   "sidenav.docs": "Docs",
   "sidenav.docs.documentation": "Documentation",
-  "sidenav.docs.changelog": "Changelog"
+  "sidenav.docs.changelog": "Changelog",
+
+  "sidenav.basic": "Basic",
+  "sidenav.basic.dashboard": "Dashboard",
+
+  "sidenav.basic.catalog": "Catalog",
+  "sidenav.basic.catalog.goods": "Goods",
+  "sidenav.basic.catalog.categories": "Categories",
+  "sidenav.basic.catalog.collections": "Collections",
+  "sidenav.basic.catalog.combo": "Combo",
+
+  "sidenav.basic.orders": "Orders",
+
+  "sidenav.basic.clients": "Clients",
+  "sidenav.basic.clients.list": "Client list",
+  "sidenav.basic.clients.groups": "Client groups",
+
+  "sidenav.basic.banners": "Banners",
+
+  "sidenav.basic.promoCodes": "Promo codes",
+
+  "sidenav.basic.offlinePoints": "Offline points",
+  "sidenav.basic.offlinePoints.addresses": "Addresses",
+  "sidenav.basic.offlinePoints.geofences": "Geofences",
+
+  "sidenav.basic.employees": "Employees",
+
+  "sidenav.basic.mailings": "Mailings",
+
+  "sidenav.system": "System",
+  "sidenav.system.settings": "Settings",
+  "sidenav.system.mobileApplications": "Mobile applications",
+  "sidenav.system.logs": "Logs"
 }
