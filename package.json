@@ -59,9 +59,8 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts --openssl-legacy-provider start",
+    "start": "serve -s build",
     "build": "react-scripts --openssl-legacy-provider build",
-    "serve": "serve -s build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "dev": "concurrently \"npm run start\" \"gulp watch\""
