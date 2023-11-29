@@ -1,100 +1,80 @@
-import React, { useState } from "react";
-import { Card, Table, Select, Input, Button, Badge, Menu } from "antd";
-import ProductListData from "assets/data/product-list.data.json";
+import React, { useEffect, useState } from "react";
+import { Card, Table, Select, Input, Button, Menu } from "antd";
 import {
   EyeOutlined,
   DeleteOutlined,
   SearchOutlined,
   PlusCircleOutlined,
 } from "@ant-design/icons";
-import AvatarStatus from "components/shared-components/AvatarStatus";
 import EllipsisDropdown from "components/shared-components/EllipsisDropdown";
 import Flex from "components/shared-components/Flex";
-import NumberFormat from "react-number-format";
 import { useHistory } from "react-router-dom";
 import utils from "utils";
-
-const { Option } = Select;
-
-const getStockStatus = (stockCount) => {
-  if (stockCount >= 10) {
-    return (
-      <>
-        <Badge status="success" />
-        <span>In Stock</span>
-      </>
-    );
-  }
-  if (stockCount < 10 && stockCount > 0) {
-    return (
-      <>
-        <Badge status="warning" />
-        <span>Limited Stock</span>
-      </>
-    );
-  }
-  if (stockCount === 0) {
-    return (
-      <>
-        <Badge status="error" />
-        <span>Out of Stock</span>
-      </>
-    );
-  }
-  return null;
-};
-
-const categories = ["Cloths", "Bags", "Shoes", "Watches", "Devices"];
+import Loading from "components/shared-components/Loading";
+import { useFetching } from "hooks/useFetching";
 
 const List = () => {
   let history = useHistory();
-  const [list, setList] = useState(ProductListData);
   const [selectedRows, setSelectedRows] = useState([]);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
-  const dropdownMenu = (row) => (
-    <Menu>
-      <Menu.Item onClick={() => viewDetails(row)}>
-        <Flex alignItems="center">
-          <EyeOutlined />
-          <span className="ml-2">View Details</span>
-        </Flex>
-      </Menu.Item>
-      <Menu.Item onClick={() => deleteRow(row)}>
-        <Flex alignItems="center">
-          <DeleteOutlined />
-          <span className="ml-2">
-            {selectedRows.length > 0
-              ? `Delete (${selectedRows.length})`
-              : "Delete"}
-          </span>
-        </Flex>
-      </Menu.Item>
-    </Menu>
+  const [clients, setClients] = useState("");
+  const [stableClients, setStableClients] = useState("");
+
+  const [fetchClients, isClientsLoading, clientError] = useFetching(
+    async () => {
+      const response = await fetch(
+        "https://jsonplaceholder.typicode.com/users"
+      );
+      const data = await response.json();
+      setClients(data);
+      setStableClients(data);
+    }
   );
 
-  const addProduct = () => {
-    history.push(`/app/apps/ecommerce/add-product`);
+  useEffect(() => {
+    fetchClients();
+  }, []);
+
+  // const dropdownMenu = (row) => (
+  //   <Menu>
+  //     <Menu.Item onClick={() => editCLient(row)}>
+  //       <Flex alignItems="center">
+  //         <EyeOutlined />
+  //         <span className="ml-2">Edit client</span>
+  //       </Flex>
+  //     </Menu.Item>
+  //     <Menu.Item onClick={() => deleteRow(row)}>
+  //       <Flex alignItems="center">
+  //         <DeleteOutlined />
+  //         <span className="ml-2">
+  //           {selectedRows.length > 0
+  //             ? `Delete (${selectedRows.length})`
+  //             : "Delete"}
+  //         </span>
+  //       </Flex>
+  //     </Menu.Item>
+  //   </Menu>
+  // );
+
+  const editCLient = (row) => {
+    history.push(`/app/basic/clients/edit-client/${row.id}`);
   };
 
-  const viewDetails = (row) => {
-    history.push(`/app/apps/ecommerce/edit-product/${row.id}`);
-  };
-
-  const deleteRow = (row) => {
-    const objKey = "id";
-    let data = list;
-    if (selectedRows.length > 1) {
-      selectedRows.forEach((elm) => {
-        data = utils.deleteArrayRow(data, objKey, elm.id);
-        setList(data);
-        setSelectedRows([]);
-      });
-    } else {
-      data = utils.deleteArrayRow(data, objKey, row.id);
-      setList(data);
-    }
-  };
+  // const deleteRow = (row) => {
+  //   const objKey = "id";
+  //   let data = stableClients;
+  //   if (selectedRows.length > 1) {
+  //     selectedRows.forEach((elm) => {
+  //       data = utils.deleteArrayRow(data, objKey, elm.id);
+  //       setClients(data);
+  //       setSelectedRows([]);
+  //     });
+  //   } else {
+  //     data = utils.deleteArrayRow(data, objKey, row.id);
+  //     setClients(data);
+  //   }
+  // };
 
   const tableColumns = [
     {
@@ -102,62 +82,64 @@ const List = () => {
       dataIndex: "id",
     },
     {
-      title: "Product",
+      title: "Name",
       dataIndex: "name",
-      render: (_, record) => (
-        <div className="d-flex">
-          <AvatarStatus
-            size={60}
-            type="square"
-            src={record.image}
-            name={record.name}
-          />
-        </div>
-      ),
       sorter: (a, b) => utils.antdTableSorter(a, b, "name"),
     },
     {
-      title: "Category",
-      dataIndex: "category",
-      sorter: (a, b) => utils.antdTableSorter(a, b, "category"),
+      title: "Username",
+      dataIndex: "username",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "username"),
     },
     {
-      title: "Price",
-      dataIndex: "price",
-      render: (price) => (
-        <div>
-          <NumberFormat
-            displayType={"text"}
-            value={(Math.round(price * 100) / 100).toFixed(2)}
-            prefix={"$"}
-            thousandSeparator={true}
-          />
-        </div>
-      ),
-      sorter: (a, b) => utils.antdTableSorter(a, b, "price"),
+      title: "Email",
+      dataIndex: "email",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "email"),
     },
     {
-      title: "Stock",
-      dataIndex: "stock",
-      sorter: (a, b) => utils.antdTableSorter(a, b, "stock"),
-    },
-    {
-      title: "Status",
-      dataIndex: "stock",
-      render: (stock) => (
-        <Flex alignItems="center">{getStockStatus(stock)}</Flex>
-      ),
-      sorter: (a, b) => utils.antdTableSorter(a, b, "stock"),
-    },
-    {
-      title: "",
-      dataIndex: "actions",
-      render: (_, elm) => (
-        <div className="text-right">
-          <EllipsisDropdown menu={dropdownMenu(elm)} />
-        </div>
+      title: "Address",
+      dataIndex: "address",
+      render: (address) => (
+        <>
+          <div>
+            <b>Street:</b> {address.street}
+          </div>
+          <div>
+            <b>Suite:</b> {address.suite}
+          </div>
+          <div>
+            <b>City:</b> {address.city}
+          </div>
+          <div>
+            <b>Zipcode: </b> {address.zipcode}
+          </div>
+        </>
       ),
     },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+    },
+    {
+      title: "Website",
+      dataIndex: "website",
+      sorter: (a, b) => utils.antdTableSorter(a, b, "website"),
+    },
+    {
+      title: "Company",
+      dataIndex: "company",
+      render: (company) => <span>{company.name}</span>,
+      sorter: (a, b) => utils.antdTableSorter(a.company, b.company, "name"),
+    },
+    // {
+    //   title: "",
+    //   dataIndex: "actions",
+    //   render: (_, elm) => (
+    //     <div className="text-right">
+    //       <EllipsisDropdown menu={dropdownMenu(elm)} />
+    //     </div>
+    //   ),
+    // },
   ];
 
   const rowSelection = {
@@ -169,20 +151,10 @@ const List = () => {
 
   const onSearch = (e) => {
     const value = e.currentTarget.value;
-    const searchArray = e.currentTarget.value ? list : ProductListData;
+    const searchArray = e.currentTarget.value ? clients : stableClients;
     const data = utils.wildCardSearch(searchArray, value);
-    setList(data);
+    setClients(data);
     setSelectedRowKeys([]);
-  };
-
-  const handleShowCategory = (value) => {
-    if (value !== "All") {
-      const key = "category";
-      const data = utils.filterArray(ProductListData, key, value);
-      setList(data);
-    } else {
-      setList(ProductListData);
-    }
   };
 
   return (
@@ -196,46 +168,28 @@ const List = () => {
               onChange={(e) => onSearch(e)}
             />
           </div>
-          <div className="mb-3">
-            <Select
-              defaultValue="All"
-              className="w-100"
-              style={{ minWidth: 180 }}
-              onChange={handleShowCategory}
-              placeholder="Category"
-            >
-              <Option value="All">All</Option>
-              {categories.map((elm) => (
-                <Option key={elm} value={elm}>
-                  {elm}
-                </Option>
-              ))}
-            </Select>
-          </div>
         </Flex>
-        <div>
-          <Button
-            onClick={addProduct}
-            type="primary"
-            icon={<PlusCircleOutlined />}
-            block
-          >
-            Add product
-          </Button>
-        </div>
       </Flex>
       <div className="table-responsive">
-        <Table
-          columns={tableColumns}
-          dataSource={list}
-          rowKey="id"
-          rowSelection={{
-            selectedRowKeys: selectedRowKeys,
-            type: "checkbox",
-            preserveSelectedRowKeys: false,
-            ...rowSelection,
-          }}
-        />
+        {isClientsLoading ? (
+          <Loading cover="content" />
+        ) : (
+          <Table
+            columns={tableColumns}
+            dataSource={clients}
+            rowKey="id"
+            rowSelection={{
+              selectedRowKeys: selectedRowKeys,
+              type: "checkbox",
+              preserveSelectedRowKeys: false,
+              ...rowSelection,
+            }}
+            onRow={(row) => ({
+              onClick: () => editCLient(row),
+            })}
+            row
+          />
+        )}
       </div>
     </Card>
   );
