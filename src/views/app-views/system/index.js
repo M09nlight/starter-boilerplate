@@ -14,10 +14,10 @@ const System = ({ match }) => {
           path={`${match.url}/mobile-applications`}
           component={lazy(() => import(`./mobile-applications`))}
         />
-        <Route
+        {/* <Route
           path={`${match.url}/logs`}
           component={lazy(() => import(`./logs`))}
-        />
+        /> */}
         <Redirect from={`${match.url}`} to={`${match.url}/settings`} />
       </Switch>
     </Suspense>
