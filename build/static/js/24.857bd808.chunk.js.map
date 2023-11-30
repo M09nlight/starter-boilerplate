@@ -1,1 +1,0 @@
-{"version":3,"sources":["views/app-views/system/logs/index.js"],"names":["Logs","_jsx","children"],"mappings":"mGAAA,uBAMeA,UAJFA,IACJC,cAAA,OAAAC,SAAK,yB","file":"static/js/24.857bd808.chunk.js","sourcesContent":["import React from \"react\";\r\n\r\nconst Logs = () => {\r\n  return <div>Logs component works!</div>;\r\n};\r\n\r\nexport default Logs;\r\n"],"sourceRoot":""}
